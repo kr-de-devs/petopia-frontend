@@ -32,6 +32,7 @@ const TabsOverview = () => {
         name="HomeScreen"
         component={HomeScreen}
         options={{
+          headerShown: false,
           tabBarLabel: 'Home',
           tabBarIcon: ({ size, color }) => <House size={size} color={color} weight="fill" />,
         }}

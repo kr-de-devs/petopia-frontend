@@ -1,29 +1,43 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { useTheme } from 'react-native-paper';
+import { Searchbar, useTheme } from 'react-native-paper';
 import { MD3Colors } from 'react-native-paper/lib/typescript/types';
 import { PetopiaTheme } from '@/theme/theme';
 import { Backend_URL } from '@env';
-
-const useStyles = (colors: MD3Colors) =>
-  StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: colors.background,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  });
+import HeaderComponent from '@/components/ui/HeaderComponent';
+import { useState } from 'react';
+import ButtonIcon from '@/components/ui/Buttons/ButtonIcon';
+import colors from '@/theme/colors';
 
 const HomeScreen = () => {
-  const { colors } = useTheme<PetopiaTheme>();
-  const styles = useStyles(colors);
+  const [searchQuery, setSearchQuery] = useState('');
+  const addNewPost = () => {
+    console.log('add');
+  };
   return (
-    <View style={styles.container}>
-      <Text style={{ color: colors.text }}>Welcome To Petopia! {Backend_URL} </Text>
-      <StatusBar style="auto" />
-    </View>
+    <ScrollView contentContainerStyle={styles.container}>
+      <HeaderComponent>
+        <ButtonIcon icon="plus" onPressHandler={addNewPost} color={colors.primary} size={24} />
+        <ButtonIcon icon="bell" onPressHandler={addNewPost} color={colors.primary} size={24} />
+        <ButtonIcon icon="run-fast" onPressHandler={addNewPost} color={colors.primary} size={24} />
+      </HeaderComponent>
+      <View>
+        <Text>FriendsRecommend</Text>
+      </View>
+      <View>
+        <Text>PostList</Text>
+      </View>
+    </ScrollView>
   );
 };
 
 export default HomeScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+    alignItems: 'center',
+    marginHorizontal: 8,
+    marginVertical: 32,
+  },
+});
