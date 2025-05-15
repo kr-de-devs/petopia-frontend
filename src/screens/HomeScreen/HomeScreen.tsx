@@ -9,11 +9,13 @@ import { useState } from 'react';
 import ButtonIcon from '@/components/ui/Buttons/ButtonIcon';
 import colors from '@/theme/colors';
 
-const HomeScreen = () => {
+type HomeScreenProps = {
+  addNewPost: () => void;
+};
+const HomeScreen: React.FC<HomeScreenProps> = (props: HomeScreenProps) => {
+  const { addNewPost } = props;
   const [searchQuery, setSearchQuery] = useState('');
-  const addNewPost = () => {
-    console.log('add');
-  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <HeaderComponent>

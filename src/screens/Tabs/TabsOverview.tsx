@@ -7,6 +7,9 @@ import BoardScreen from '../BoardScreen/BoardScreen';
 import MapScreen from '../MapScreen/MapScreen';
 import MarketScreen from '../MarketScreen/MarketScreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '@/App';
 
 type BottomTabParamList = {
   HomeScreen: undefined;
@@ -15,9 +18,15 @@ type BottomTabParamList = {
   MapScreen: undefined;
   MarketScreen: undefined;
 };
-const BottomTabs = createBottomTabNavigator<BottomTabParamList>();
 
+const BottomTabs = createBottomTabNavigator<BottomTabParamList>();
 const TabsOverview = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+  const addNewPost = () => {
+    navigation.navigate('AddPost');
+  };
+
   return (
     <BottomTabs.Navigator
       // @ts-expect-error: type system doesn't allow string id here but it's supported at runtime
@@ -30,13 +39,14 @@ const TabsOverview = () => {
     >
       <BottomTabs.Screen
         name="HomeScreen"
-        component={HomeScreen}
         options={{
           headerShown: false,
           tabBarLabel: 'Home',
           tabBarIcon: ({ size, color }) => <House size={size} color={color} weight="fill" />,
         }}
-      />
+      >
+        {() => <HomeScreen addNewPost={addNewPost} />}
+      </BottomTabs.Screen>
       <BottomTabs.Screen
         name="PeopleScreen"
         component={PeopleScreen}

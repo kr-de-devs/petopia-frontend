@@ -10,7 +10,7 @@ import TabsOverview from './screens/Tabs/TabsOverview';
 import PostScreen from './screens/PostScreen/PostScreen';
 
 export type RootStackParamList = {
-  PostScreen: undefined;
+  AddPost: undefined;
 };
 
 const Stack = createNativeStackNavigator();
@@ -19,6 +19,7 @@ const BottomTabs = createBottomTabNavigator();
 export default function App() {
   return (
     <PaperProvider theme={petopiaTheme}>
+      <StatusBar style="auto" />
       <NavigationContainer>
         <Stack.Navigator
           // @ts-expect-error: type system doesn't allow string id here but it's supported at runtime
@@ -26,11 +27,12 @@ export default function App() {
         >
           <Stack.Screen name="Tabs" component={TabsOverview} options={{ headerShown: false }} />
           <Stack.Screen
-            name="PostScreen"
+            name="AddPost"
             component={PostScreen}
             options={{
               headerStyle: { backgroundColor: colors.background },
-              headerTintColor: 'white',
+              headerTintColor: colors.text,
+              headerBackTitle: 'Home',
             }}
           />
         </Stack.Navigator>
