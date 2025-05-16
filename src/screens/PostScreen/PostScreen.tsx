@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, Platform } from 'react-native';
 import {
   TextInput,
   Button,
@@ -14,60 +14,74 @@ import {
 import { PetopiaTheme } from '@/theme/theme';
 import { Plus } from 'phosphor-react-native';
 import colors from '@/theme/colors';
+import Chip from '@/components/ui/Chips/Chip';
+import PostType from '@/components/Post/PostType';
+import InputField from '@/components/General/InputField';
+import PostDescription from '@/components/Post/PostDescription';
+import PostTag from '@/components/Post/PostTag';
+import PeopleTag from '@/components/Post/PeopleTag';
+import { pickAndUploadImage } from '@/utils/cloudinary/pickAndUploadImage';
+import ImageCard from '@/components/Post/ImageCard';
 
 const PostScreen = () => {
   const { colors } = useTheme<PetopiaTheme>();
 
   const [text, setText] = useState('');
   const [tags, setTags] = useState('');
-  const [selectedType, setSelectedType] = useState<'Regular' | 'Missing' | 'Shopping' | null>(null);
+  const [friendTags, setFriendTags] = useState('');
+  const [uploadedImages, setUploadedImages] = useState<string[]>([
+    'https://res.cloudinary.com/dambyu1dq/image/upload/v1747423411/rxhqkaiqsufkydazt4q4.jpg',
+  ]);
 
-  const handleTypeToggle = (type: typeof selectedType) => {
-    setSelectedType((prev) => (prev === type ? null : type));
+  const handleUpload = async () => {
+    const imageUrl = await pickAndUploadImage();
+    if (imageUrl) {
+      setUploadedImages([...uploadedImages, imageUrl]);
+    }
   };
 
+  let firstImage: string | null =
+    'https://res.cloudinary.com/dambyu1dq/image/upload/v1747423411/rxhqkaiqsufkydazt4q4.jpg';
+  let firstTwoImages: string[] | null = null;
+
+  if (uploadedImages.length > 0) {
+    firstImage = uploadedImages[0];
+  }
+  if (uploadedImages.length > 1) {
+    firstTwoImages = uploadedImages.slice(0, 2);
+  }
+
+  console.log('firstImage', firstImage);
   return (
     <ScrollView style={[styles.scroll, { backgroundColor: colors.background }]}>
       <View style={styles.content}>
         <View style={styles.imageRow}>
-          <Card style={[styles.imageCard, { alignItems: 'center', justifyContent: 'center' }]}>
-            <IconButton icon={() => <Plus size={24} color={colors.primary} />} onPress={() => {}} />
-          </Card>
-        </View>
-
-        <TextInput
-          label="오늘의 추억을 기록해보세요 :)"
-          value={text}
-          onChangeText={setText}
-          multiline
-          mode="outlined"
-          style={styles.input}
-        />
-
-        <TextInput
-          label="#태그를 입력하세요"
-          value={tags}
-          onChangeText={setTags}
-          mode="outlined"
-          style={styles.tagInput}
-        />
-
-        <TextInput label="펫 또는 사용자 태그" mode="outlined" style={styles.input} />
-
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>게시글 유형</Text>
-        <RadioButton.Group
-          onValueChange={(newValue) => setSelectedType(newValue as typeof selectedType)}
-          value={selectedType}
-        >
-          <View style={styles.radioRow}>
-            {['Regular', 'Missing', 'Shopping'].map((type) => (
-              <View key={type} style={styles.radioItem}>
-                <RadioButton value={type} />
-                <Text>{type}</Text>
+          {uploadedImages && firstImage && !firstTwoImages && (
+            <View style={styles.imageCard}>
+              <ImageCard imageUrl={firstImage} />
+            </View>
+          )}
+          {uploadedImages &&
+            firstTwoImages &&
+            firstTwoImages.map((image) => (
+              <View key={image} style={styles.imageCard}>
+                <ImageCard imageUrl={image} />
               </View>
             ))}
-          </View>
-        </RadioButton.Group>
+          <ImageCard onPressHandler={handleUpload} />
+        </View>
+        <View style={styles.descriptionContainer}>
+          <PostDescription description={text} setDescription={setText} />
+        </View>
+        <PostTag tags={tags} setTags={setTags} />
+
+        <View style={styles.peopleTagContainer}>
+          <PeopleTag tags={friendTags} setTags={setFriendTags} />
+        </View>
+
+        <View style={styles.peopleTagContainer}>
+          <PostType />
+        </View>
 
         <Button
           mode="contained"
@@ -101,31 +115,15 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     overflow: 'hidden',
   },
-  tagInput: {
-    backgroundColor: colors.background,
+  descriptionContainer: {
+    marginVertical: 16,
   },
-  input: {
-    backgroundColor: colors.background,
-    height: 100,
-  },
-  sectionTitle: {
-    marginTop: 10,
-    fontSize: 16,
-    fontWeight: '600',
+  peopleTagContainer: {
+    marginBottom: 16,
   },
   button: {
     marginTop: 20,
     borderRadius: 8,
-  },
-  radioRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginVertical: 10,
-  },
-  radioItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: 8,
   },
 });
 

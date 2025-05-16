@@ -1,10 +1,5 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import { Searchbar, useTheme } from 'react-native-paper';
-import { MD3Colors } from 'react-native-paper/lib/typescript/types';
-import { PetopiaTheme } from '@/theme/theme';
-import { Backend_URL } from '@env';
-import HeaderComponent from '@/components/ui/HeaderComponent';
+import { View, Text, StyleSheet, ScrollView, Platform } from 'react-native';
+import HeaderComponent from '@/components/General/HeaderComponent';
 import { useState } from 'react';
 import ButtonIcon from '@/components/ui/Buttons/ButtonIcon';
 import colors from '@/theme/colors';
@@ -40,6 +35,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignItems: 'center',
     marginHorizontal: 8,
-    marginVertical: 32,
+    marginVertical: Platform.OS === 'android' ? 8 : 32,
   },
 });
